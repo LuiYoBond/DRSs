@@ -1,23 +1,15 @@
 name: Build VST3 and AU Plugins
-
-on:
-  push:
-  workflow_dispatch:
-
+on: [push, workflow_dispatch]
 jobs:
-  build-macos:
+  build:
     runs-on: macos-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Configure CMake (Universal Apple Silicon + Intel)
+      - uses: actions/checkout@v4
+      - name: Configure
         run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
-
-      - name: Compile VST3 and AU
+      - name: Build
         run: cmake --build build --config Release
-
-      - name: Package Plugins for Download
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: DynamicResonanceSuppressor-macOS-Plugins
